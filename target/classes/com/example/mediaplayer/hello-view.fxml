@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.media.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.mediaplayer.HelloController">
+<VBox alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mediaplayer.HelloController">
   <padding>
-    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
   </padding>
-
-  <Label fx:id="welcomeText"/>
-  <Button text="Hello!" onAction="#onHelloButtonClick"/>
+  <BorderPane prefHeight="523.0" prefWidth="760.0">
+    <center>
+      <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" BorderPane.alignment="CENTER" />
+    </center>
+    <bottom>
+      <VBox prefHeight="68.0" prefWidth="760.0" BorderPane.alignment="CENTER">
+        <children>
+          <HBox alignment="CENTER" prefHeight="70.0" prefWidth="760.0" VBox.vgrow="ALWAYS">
+            <VBox.margin>
+              <Insets />
+            </VBox.margin>
+            <children>
+              <Slider fx:id="sldTime" onMousePressed="#sldTimePress" HBox.hgrow="ALWAYS" />
+            </children>
+            <padding>
+              <Insets left="15.0" right="15.0" />
+            </padding>
+          </HBox>
+          <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+            <children>
+              <Button fx:id="btnMedia" mnemonicParsing="false" onAction="#btnMediaClick" text="Select Media" />
+              <Button fx:id="btnPlay" mnemonicParsing="false" onAction="#btnPlayClick" text="Play" />
+              <Button fx:id="btnStop" mnemonicParsing="false" onAction="#btnStopClick" text="Stop" />
+              <Label fx:id="lblTime" text="Time: 00 / 00" />
+            </children>
+          </HBox>
+        </children>
+      </VBox>
+    </bottom>
+  </BorderPane>
 </VBox>
