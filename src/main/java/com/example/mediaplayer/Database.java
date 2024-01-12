@@ -1,12 +1,15 @@
 package com.example.mediaplayer;
 
+import java.io.File;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class Database {
     public static final String USERNAME = "sa"; //username for SSMS login
     public static final String PASSWORD = "1234"; //password for SSMS login
-    public static final String DATABASE_NAME = "dbTest"; //database
+    public static final String DATABASE_NAME = "dbMedia-player"; //database
     public static final String PORT = "1433"; //SSMS port here, 1433 is default
     public static final String URL = "jdbc:sqlserver://localhost:" + PORT + ";databaseName=" + DATABASE_NAME;
     public static final String ENCRYPT = "false";
@@ -36,6 +39,7 @@ public class Database {
     public static Connection databaseConnection(Properties properties, String URL) {
         try {
             connection = DriverManager.getConnection(URL, properties);
+            System.out.println("DB Connection succesful");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -72,4 +76,6 @@ public class Database {
             }
         } catch (SQLException ignore) {}
     }
+
+
 }
