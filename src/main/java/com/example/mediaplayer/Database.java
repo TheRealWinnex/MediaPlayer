@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Properties;
 
 public class Database {
-    public static final String USERNAME = "SIMON-PC\\testt"; //username for SSMS login
-    public static final String PASSWORD = ""; //password for SSMS login
-    public static final String DATABASE_NAME = "dbMedia-player"; //database
+    public static final String USERNAME = "sa"; //username for SSMS login
+    public static final String PASSWORD = "1234"; //password for SSMS login
+    public static final String DATABASE_NAME = "dbTest"; //database
     public static final String PORT = "1433"; //SSMS port here, 1433 is default
     public static final String URL = "jdbc:sqlserver://localhost:" + PORT + ";databaseName=" + DATABASE_NAME;
     public static final String ENCRYPT = "false";
