@@ -17,8 +17,7 @@ public class Database {
 
     public static void main(String[] args) {
         try {
-            Connection connection = testDatabaseConnection();
-            // Do something with the connection if needed
+            testDatabaseConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }
