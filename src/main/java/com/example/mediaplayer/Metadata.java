@@ -106,7 +106,7 @@ public class Metadata {
 
         PreparedStatement getData; //Prepare SQl-statement (CRUD)
 
-        //Get data from table in database with SQl-statement
+        //Insert the collected and stored metadata into the database in the media table.
         try {
             getData = connection.prepareCall("SELECT * FROM Media");
         } catch (SQLException e) {
