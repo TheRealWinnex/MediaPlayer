@@ -36,7 +36,7 @@ public class Metadata {
      * Metadata includes filename, last modified date, file size, and video duration (if applicable).
      */
     public static void storeMetadata() {
-        String filepath = "C:/Users/testt/Desktop/MediaPlayer/Media"; // location of media
+        String filepath = "/Users/winnex/Desktop/MediaPlayer/Media"; // location of media
         List<String[]> metadataList = new ArrayList<>(); // arraylist object to hold metadata
 
         File folder = new File(filepath); // Create a File object representing the directory at the specified file path - in this case the media folder
