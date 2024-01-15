@@ -1,15 +1,21 @@
 package com.example.mediaplayer;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
+
 public class Metadata {
     public static void main(String[] args) {
         storeMetadata();
+        insertMetadata();
     }
 
 
@@ -96,7 +102,27 @@ public class Metadata {
 
 
     public static void insertMetadata() {
-        //insert all the metadata for each file in each row in the database, the table is called "dbo.Media" it has the following columns: "MediaName", "MediaDate", "MediaDuration", and "MediaVolume"
+        Connection connection = Database.connection;
+
+        PreparedStatement getData; //Prepare SQl-statement (CRUD)
+
+
+        //Get data from table in database with SQl-statement
+        try {
+            getData = connection.prepareCall("SELECT * FROM Media");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        //Display table data
+        try {
+            ResultSet tableData = getData.executeQuery();
+            while (tableData.next()) {
+                int ID = tableData.getInt("ID");
+                String name = tableData.getString("Name");
+
+                System.out.printf("ID: %d Name: %s%n", ID, name);
+            }
+        } catch (SQLException ignore) {}
     }
 }
 
