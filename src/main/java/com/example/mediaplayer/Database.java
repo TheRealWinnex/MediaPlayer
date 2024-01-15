@@ -15,6 +15,7 @@ public class Database {
     public static void main(String[] args) {
         try {
             databaseConnection();
+            selectAndDisplay();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,13 +51,13 @@ public class Database {
         return properties;
     }
 
-    public static void test() {
+    public static void selectAndDisplay() {
         System.out.println("Running test:");
         //Prepare SQl-statement (CRUD)
         PreparedStatement getData;
         //Get data from table in database with SQl-statement
         try {
-            getData = connection.prepareCall("SELECT * FROM tblUser");
+            getData = connection.prepareCall("SELECT * FROM Media");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -64,8 +65,8 @@ public class Database {
         try {
             ResultSet tableData = getData.executeQuery();
             while (tableData.next()) {
-                int ID = tableData.getInt("fldID");
-                String name = tableData.getString("fldName");
+                int ID = tableData.getInt("ID");
+                String name = tableData.getString("Name");
 
                 System.out.printf("ID: %d Name: %s%n", ID, name);
             }
