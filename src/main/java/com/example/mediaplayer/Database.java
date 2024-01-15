@@ -50,8 +50,9 @@ public class Database {
 
     public static void selectAndDisplay() {
         System.out.println("Running test:");
-        //Prepare SQl-statement (CRUD)
-        PreparedStatement getData;
+
+        PreparedStatement getData; //Prepare SQl-statement (CRUD)
+
         //Get data from table in database with SQl-statement
         try {
             getData = connection.prepareCall("SELECT * FROM Media");
@@ -65,7 +66,7 @@ public class Database {
                 int ID = tableData.getInt("ID");
                 String name = tableData.getString("Name");
 
-                System.out.printf("ID: %d Name: %s%n", ID, name);
+                System.out.printf("ID: %d Name: %s", ID, name);
             }
         } catch (SQLException ignore) {}
     }

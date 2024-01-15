@@ -102,10 +102,9 @@ public class Metadata {
 
 
     public static void insertMetadata() {
-        Connection connection = Database.connection;
+        Connection connection = Database.connection; // Use connection variable from database class
 
         PreparedStatement getData; //Prepare SQl-statement (CRUD)
-
 
         //Get data from table in database with SQl-statement
         try {
