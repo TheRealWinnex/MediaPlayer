@@ -40,13 +40,14 @@ public class Metadata {
      * Metadata includes filename, last modified date, file size, and video duration (if applicable).
      */
     public static void storeMetadata() {
-        String filepath = "/Users/winnex/Desktop/MediaPlayer/Media"; // location of media
+        String filepath = "C:\\Users\\testt\\Desktop\\MediaPlayer\\Media"; // location of media
         List<String[]> metadataList = new ArrayList<>(); // arraylist object to hold metadata
 
         File folder = new File(filepath); // Create a File object representing the directory at the specified file path - in this case the media folder
         File[] files = folder.listFiles(); // retrieve all files in the folder
 
         if (files != null) { // if no files are found, stop
+            System.out.println("Gathering and storing metadata.");
             for (File file : files) {
 
                 if (file.isFile()) { // checks if the file is of the file datatype
@@ -54,10 +55,6 @@ public class Metadata {
                     metadataList.add(metadata); // add metadata to list for each file
                     insertMetadata(metadata[0], metadata[1], metadata[2]);
                 }
-            }
-
-            for (String[] metadata : metadataList) {
-                System.out.println(String.join(", ", metadata)); // print metadata for each file
             }
         }
     }
@@ -110,17 +107,17 @@ public class Metadata {
         // That way we avoid duplicate entries, and ensure they are up-to-date.
         try {
             handleMetadata = connection.prepareStatement(
-                    "MERGE INTO Media AS target " + // use Media table as target
-                            "USING (VALUES (?, ?, ?)) AS source (Name, Date, Filesize) " + // use Name, Date, Filesize ad placeholders
-                            "ON target.Name = source.Name " + // when there's an entry in the media table with the same name as one of the media then
-                            "WHEN MATCHED BY SOURCE THEN " + // if there is a database entry, but no media, delete the database entry
+                    "MERGE INTO Media AS target " +
+                            "USING (VALUES (?, ?, ?)) AS source (Name, Date, Filesize) " +
+                            "ON target.Name = source.Name " +
+                            "WHEN MATCHED AND source.Name IS NULL THEN " +
                             "   DELETE " +
-                            "WHEN MATCHED AND (target.Date <> source.Date OR target.Filesize <> source.Filesize) THEN " + // if there is a name match, but date or filesize differs, do SQL update
+                            "WHEN MATCHED AND (target.Date <> source.Date OR target.Filesize <> source.Filesize) THEN " +
                             "   UPDATE SET target.Date = source.Date, target.Filesize = source.Filesize " +
-                            "WHEN NOT MATCHED THEN " + // if one does not exist in the database, but the media folder, create it
+                            "WHEN NOT MATCHED THEN " +
                             "   INSERT (Name, Date, Filesize) VALUES (source.Name, source.Date, source.Filesize);"
-
             );
+
 
 
 
@@ -131,8 +128,8 @@ public class Metadata {
             handleMetadata.setString(3, fileSize);
 
             // Execute the update (insert) operation
-            int rowsAffected = handleMetadata.executeUpdate();
-            System.out.println("Rows affected: " + rowsAffected);
+            handleMetadata.executeUpdate();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
