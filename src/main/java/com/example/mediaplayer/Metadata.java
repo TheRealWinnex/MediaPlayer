@@ -3,7 +3,6 @@ package com.example.mediaplayer;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import java.util.List;
 public class Metadata {
     public static void main(String[] args) {
         storeMetadata();
-        insertMetadata();
     }
 
 
@@ -54,6 +52,7 @@ public class Metadata {
                 if (file.isFile()) { // checks if the file is of the file datatype
                     String[] metadata = getMetadataFromFile(file); // retrieve metadata from each file
                     metadataList.add(metadata); // add metadata to list for each file
+                    insertMetadata(metadata[0], metadata[1], metadata[2]);
                 }
             }
 
@@ -101,27 +100,43 @@ public class Metadata {
 
 
 
-    public static void insertMetadata() {
+    public static void insertMetadata(String fileName, String fileDate, String fileSize) {
         Connection connection = Database.connection; // Use connection variable from database class
 
-        PreparedStatement getData; //Prepare SQl-statement (CRUD)
+        PreparedStatement handleMetadata; // Prepare SQL statement (CRUD)
 
-        //Insert the collected and stored metadata into the database in the media table.
+        // Insert the collected and stored metadata into the database in the media table.
+        // If there already is a file with that name created, it will update data instead of insert.
+        // That way we avoid duplicate entries, and ensure they are up-to-date.
         try {
-            getData = connection.prepareCall("SELECT * FROM Media");
+            handleMetadata = connection.prepareStatement(
+                    "MERGE INTO Media AS target " + // use Media table as target
+                            "USING (VALUES (?, ?, ?)) AS source (Name, Date, Filesize) " + // use Name, Date, Filesize ad placeholders
+                            "ON target.Name = source.Name " + // when there's an entry in the media table with the same name as one of the media then
+                            "WHEN MATCHED BY SOURCE THEN " + // if there is a database entry, but no media, delete the database entry
+                            "   DELETE " +
+                            "WHEN MATCHED AND (target.Date <> source.Date OR target.Filesize <> source.Filesize) THEN " + // if there is a name match, but date or filesize differs, do SQL update
+                            "   UPDATE SET target.Date = source.Date, target.Filesize = source.Filesize " +
+                            "WHEN NOT MATCHED THEN " + // if one does not exist in the database, but the media folder, create it
+                            "   INSERT (Name, Date, Filesize) VALUES (source.Name, source.Date, source.Filesize);"
+
+            );
+
+
+
+
+            // Set values for the parameters in the prepared statement
+            handleMetadata.setString(1, fileName);
+            handleMetadata.setString(2, fileDate);
+            handleMetadata.setString(3, fileSize);
+
+            // Execute the update (insert) operation
+            int rowsAffected = handleMetadata.executeUpdate();
+            System.out.println("Rows affected: " + rowsAffected);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        //Display table data
-        try {
-            ResultSet tableData = getData.executeQuery();
-            while (tableData.next()) {
-                int ID = tableData.getInt("ID");
-                String name = tableData.getString("Name");
-
-                System.out.printf("ID: %d Name: %s%n", ID, name);
-            }
-        } catch (SQLException ignore) {}
     }
+
 }
 
